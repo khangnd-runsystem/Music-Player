@@ -269,16 +269,41 @@ const app = {
     this.loadCurrentSong();
   },
 
+  /**
+   * Chọn một bài hát ngẫu nhiên chưa được phát trong chu kỳ hiện tại
+   * Tránh lặp lại bài hát đang phát và các bài đã phát
+   */
   playRandomSong: function() {
-    let newIndex;
-    do {
-      if (this.playIndices.length === this.song.length) {
-        this.playIndices = [];
-      }
-      // Tạo ra một số ngẫu nhiên trong khoảng từ 0 đến độ dài của mảng bài hát
-      newIndex = Math.floor(Math.random() * this.song.length);
+    // Reset danh sách nếu đã phát hết tất cả bài
+    if (this.playIndices.length === this.song.length) {
+      this.playIndices = [];
     }
-    while (newIndex === this.currentIndex || this.playIndices.includes(newIndex));
+
+    let newIndex;
+    let attempts = 0;
+    const maxAttempts = this.song.length * 2; // Tránh vòng lặp vô hạn
+
+    // Tạo số ngẫu nhiên cho đến khi tìm được bài hợp lệ
+    while (attempts < maxAttempts) {
+      newIndex = Math.floor(Math.random() * this.song.length);
+      
+      // Kiểm tra xem bài hát có hợp lệ không
+      const isCurrentSong = newIndex === this.currentIndex;
+      const isAlreadyPlayed = this.playIndices.includes(newIndex);
+      
+      if (!isCurrentSong && !isAlreadyPlayed) {
+        break; // Tìm được bài hợp lệ, thoát khỏi vòng lặp
+      }
+      
+      attempts++;
+    }
+
+    // Fallback: nếu không tìm được bài hợp lệ, chọn bài đầu tiên
+    if (attempts >= maxAttempts) {
+      newIndex = 0; // Đơn giản hóa fallback
+    }
+
+    // Cập nhật trạng thái
     this.playIndices.push(newIndex);
     this.currentIndex = newIndex;
   },
