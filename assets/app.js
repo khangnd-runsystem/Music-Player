@@ -29,12 +29,16 @@ const prevBtn = $('.btn-prev');
 const randomBtn = $('.btn-random');
 const repeatBtn = $('.btn-repeat');
 const playlist = $('.playlist');
+const volumeBtn = $('.btn-volume');
+const volumeSlider = $('#volume');
+const volumeValue = $('.volume-value');
 
 const app = {
   currentIndex: 0,
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
+  isMuted: false,
   playIndices: [],
   config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
   song: [
@@ -231,6 +235,24 @@ const app = {
         // Handle option click if needed
       }
     }
+
+    // Volume control events
+    // Khi click vào volume button (toggle mute)
+    volumeBtn.onclick = function() {
+      _this.toggleMute();
+    }
+
+    // Khi thay đổi volume slider
+    volumeSlider.oninput = function(e) {
+      const volume = parseInt(e.target.value);
+      _this.setVolume(volume);
+    }
+
+    // Khi thay đổi volume slider (smooth)
+    volumeSlider.onchange = function(e) {
+      const volume = parseInt(e.target.value);
+      _this.setVolume(volume);
+    }
   },
 
   loadCurrentSong: function() {
@@ -242,6 +264,68 @@ const app = {
   loadConfig: function() {
     this.isRandom = this.config.isRandom;
     this.isRepeat = this.config.isRepeat;
+    this.isMuted = this.config.isMuted || false;
+    
+    // Load volume from config or set default
+    const savedVolume = this.config.volume || 70;
+    this.setVolume(savedVolume);
+  },
+
+  /**
+   * Thiết lập âm lượng cho audio
+   * @param {number} volume - Giá trị âm lượng từ 0-100
+   */
+  setVolume: function(volume) {
+    const volumeDecimal = volume / 100;
+    audio.volume = volumeDecimal;
+    volumeSlider.value = volume;
+    volumeValue.textContent = volume + '%';
+    
+    // Cập nhật icon volume
+    this.updateVolumeIcon(volume);
+    
+    // Lưu vào config
+    this.setConfig('volume', volume);
+  },
+
+  /**
+   * Cập nhật icon volume dựa trên giá trị âm lượng
+   * @param {number} volume - Giá trị âm lượng từ 0-100
+   */
+  updateVolumeIcon: function(volume) {
+    const volumeIcon = volumeBtn.querySelector('i');
+    
+    if (this.isMuted || volume === 0) {
+      volumeIcon.className = 'fas fa-volume-mute';
+    } else if (volume < 30) {
+      volumeIcon.className = 'fas fa-volume-down';
+    } else if (volume < 70) {
+      volumeIcon.className = 'fas fa-volume-up';
+    } else {
+      volumeIcon.className = 'fas fa-volume-up';
+    }
+  },
+
+  /**
+   * Toggle mute/unmute
+   */
+  toggleMute: function() {
+    this.isMuted = !this.isMuted;
+    
+    if (this.isMuted) {
+      // Lưu volume hiện tại trước khi mute
+      this.setConfig('previousVolume', volumeSlider.value);
+      audio.volume = 0;
+      volumeValue.textContent = '0%';
+      volumeSlider.value = 0;
+    } else {
+      // Khôi phục volume trước khi mute
+      const previousVolume = this.config.previousVolume || 70;
+      this.setVolume(previousVolume);
+    }
+    
+    this.updateVolumeIcon(volumeSlider.value);
+    this.setConfig('isMuted', this.isMuted);
   },
 
   scrollToActiveSong: function() {
@@ -327,6 +411,9 @@ const app = {
     // Hiển thị trạng thái ban đầu của button repeat 
     randomBtn.classList.toggle('active', this.isRandom);
     repeatBtn.classList.toggle('active', this.isRepeat);
+    
+    // Khởi tạo volume control
+    this.updateVolumeIcon(volumeSlider.value);
   },
 }
 
