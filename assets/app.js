@@ -78,6 +78,37 @@ const app = {
       path: "./assets/music/ed-sheeran-shape-of-you.mp3",
       image: "https://th.bing.com/th/id/OIP.TLRlQP7N61REDvgV_OAdHgHaHa?rs=1&pid=ImgDetMain"
     },
+    {
+      name: "Bát Cơm Mặn",
+      singer: "Ong Bây Bi",
+      path: "./assets/music/Bát Cơm Mặn.mp3",
+      image: "https://tse3.mm.bing.net/th/id/OIP.DW8-142j93jkoEkWrzABDQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+      name: "Gặp Lại Năm Ta 60",
+      singer: "Ong Bây Bi",
+      path: "./assets/music/Gặp Lại Năm Ta 60.mp3",
+      image: "https://tse3.mm.bing.net/th/id/OIP.DW8-142j93jkoEkWrzABDQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+      name: "Khóa Ly Biệt",
+      singer: "Voi Bản Đôn",
+      path: "./assets/music/Khóa Ly Biệt.mp3",
+      image: "https://tse3.mm.bing.net/th/id/OIP.DW8-142j93jkoEkWrzABDQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+      name: "Rời Bỏ",
+      singer: "Voi Bản Đôn",
+      path: "./assets/music/Rời Bỏ.mp3",
+      image: "https://tse3.mm.bing.net/th/id/OIP.DW8-142j93jkoEkWrzABDQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+      name: "Rồi Em Sẽ Gặp Một Chàng Trai Khác",
+      singer: "Hippohappy",
+      path: "./assets/music/Rồi Em Sẽ Gặp Một Chàng Trai Khác.mp3",
+      image: "https://tse3.mm.bing.net/th/id/OIP.DW8-142j93jkoEkWrzABDQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    
   ],
 
   setConfig: function(key, value) {
